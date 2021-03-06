@@ -3,22 +3,26 @@
     padding: 0;
     }
 
+    .header {
+        min-height: 100px;
+        background-color: grey;
+    }
 
     .block-btn-cart {
     display: flex;
     justify-content: center;
-    margin-bottom: 50px;
+    padding-top: 30px;
+}
+
+.btn-cart {
+    width: 100px;
+    min-height: 30px;
 }
 
 .products {
     display: flex;
     justify-content: space-evenly;
-}
-
-.product-item {
-    display: flex;
-    flex-direction: column;
-    
+    margin-top: 30px;
 }
 
 
