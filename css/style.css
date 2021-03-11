@@ -3,22 +3,36 @@
     padding: 0;
     }
 
+    .header {
+        min-height: 100px;
+        background-color: grey;
+        position: relative;
+    }
 
     .block-btn-cart {
     display: flex;
     justify-content: center;
-    margin-bottom: 50px;
+    padding-top: 30px;
+}
+
+.btn-cart {
+    width: 100px;
+    min-height: 30px;
+}
+
+.cart__window {
+    width: 500px;
+    height: 500px;
+    background-color: white;
+    border: 1px solid black;
+    position: absolute;
+    display: none;
 }
 
 .products {
     display: flex;
     justify-content: space-evenly;
-}
-
-.product-item {
-    display: flex;
-    flex-direction: column;
-    
+    margin-top: 30px;
 }
 
 
