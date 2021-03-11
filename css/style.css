@@ -6,6 +6,7 @@
     .header {
         min-height: 100px;
         background-color: grey;
+        position: relative;
     }
 
     .block-btn-cart {
@@ -17,6 +18,15 @@
 .btn-cart {
     width: 100px;
     min-height: 30px;
+}
+
+.cart__window {
+    width: 500px;
+    height: 500px;
+    background-color: white;
+    border: 1px solid black;
+    position: absolute;
+    display: none;
 }
 
 .products {
