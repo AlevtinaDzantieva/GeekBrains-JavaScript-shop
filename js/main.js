@@ -1,16 +1,86 @@
 const API_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
-class ProductList {
-    constructor (container = ".products"){
+class List {
+    constructor(url, container, list = list2) {
         this.container = container;
-        this.goods = [];
-        this._getProducts()
-            .then(data => {
-                this.goods = [...data];
-                console.log (this.goods);
-                this.render()
-            });
+        this.list = list;
+        this.url = url;
+        this.goods= [];
+        this.allProducts = [];
+        this._init();
     }
+
+    getJson(url) {
+        return fetch(url ? url: `${API_URL}/catalogData.json`)
+            .then(result =>result.json())
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
+    handleData(data){
+        this.goods = [...data];
+        this.render;
+    }
+
+    calcSumm(){
+        return this.allProducts.reduce((accum, item) => accum += item.price, 0);
+    }
+
+    render(){
+        const block = document.querySelector(this.container);
+        for(let product of this.goods){
+            const  productObj = new this.list[this.constructor.name](product);
+            console.log(productObj);
+            this.allProducts.push(productObj);
+            //block.innerHTML += productObj.render();
+            block.insertAdjacentHTML("beforeend", productObj.render());
+        }
+    }
+
+    _init(){
+        return false
+    }
+}
+
+class Item {
+    constructor(el, img = 'https://www.ibisegypttours.com/images/accomadation/blogpost-placeholder-100x100.png'){
+        this.product_name = el.product_name;
+        this.price = el.price;
+        this.id_product = el.id_product;
+        this.img = img;
+    }
+
+    render(){
+        return `<div class="product-item" data-id="${this.id_product}">
+                <img src="${this.img}" alt="photo">
+                <div class="desc">
+                    <h3 class="product-item-heading">${this.product_name}</h3>
+                    <p class="product-item-price">${this.price}</p>
+                    <button class="buy-btn"
+                    data-id="${this.id_product}"
+                    data-id="${this.product_name}"
+                    data-id="${this.price}">Купить</button>
+                </div>
+            </div>`
+    }
+}
+
+class ProductList extends List {
+    constructor (cart, container = ".products", url = "/catalog.json"){
+        super(url,container);
+        this.cart = cart;
+        this.getJson()
+            .then(data => this.handleData(data));
+    }
+    _init(){
+        document.querySelector(this.container).addEventListener('click', e => {
+            if(e.target.classList.contains('buy-btn')) {
+                this.cart.addProduct(e.target);
+            }
+        });
+    }
+}
 
     /*_fetchProducts(){
         this.goods = [
@@ -20,7 +90,7 @@ class ProductList {
             {id: 4, title: 'Gamepad', price: 50},
         ]*/
 
-    _getProducts(){
+    /*_getProducts(){
         return fetch(`${API_URL}/catalogData.json`)
             .then(result =>result.json())
             .catch(error => {
@@ -29,21 +99,9 @@ class ProductList {
     }
 
 
-    render(){
-        const block = document.querySelector(this.container);
-        for(let product of this.goods){
-            const  productObj = new ProductItem(product);
-            //block.innerHTML += productObj.render();
-            block.insertAdjacentHTML("beforeend", productObj.render());
-        }
-    }
+    
 
-    summa(){
-        let res = this.goods.reduce((accum,item) => accum += item.price, 0);
-        alert(res);
-    }
-
-
+    
     /*summa(){
         let mas = this.goods;
         let sum = 0;
@@ -53,25 +111,9 @@ class ProductList {
         alert(sum);
     }*/
 
-}
 
-class ProductItem {
-    constructor (product, img = 'https://www.ibisegypttours.com/images/accomadation/blogpost-placeholder-100x100.png'){
-        this.title = product.product_name;
-        this.price = product.price;
-        this.id = product.id;
-        this.img = img
-    }
 
-    render(){
-        return `<div class="product-item">
-                <img src="${this.img}">
-                <h3 class="product-item-heading">${this.title}</h3>
-                <p class="product-item-price">${this.price}</p>
-                <button class="buy-btn">Купить</button>
-            </div>`
-    }
-}
+class ProductItem extends Item {}
 
 class Cart {
     addGoods(){
@@ -89,26 +131,13 @@ class Cart {
 }
 
 class ElemCart {
-    constructor (product, img = 'https://www.ibisegypttours.com/images/accomadation/blogpost-placeholder-100x100.png'){
-        this.title = product.;
-        this.price = product.;
-        this.id = product.;
-        this.img = img
+    
     }
 
-    render(){
-        return `<div class="cart__window">
-                <img src="${this.img}">
-                <h3 class="product-item-heading">${this.title}</h3>
-                <p class="product-item-price">${this.price}</p>
-            </div>`
-    }
-}
-
-let blockCart = document.querySelector('.btn-cart');
+/*let blockCart = document.querySelector('.btn-cart');
 blockCart.addEventListener ('click', function() {
     document.querySelector('.cart__window').style.display = 'block'
-});
+});*/
 
 let list = new ProductList();
 list.summa();
