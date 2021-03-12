@@ -115,23 +115,75 @@ class ProductList extends List {
 
 class ProductItem extends Item {}
 
-class Cart {
-    addGoods(){
-
+class Cart extends List {
+    constructor(container=".cart-block", url = "getBascet.json") {
+        super(url,container);
+        this.getJson()
+            .then(data => {
+                this.handleData(data, contents); //вывели все товары корзины
+            });
     }
-    removeGoods(){
-
+    addProduct(element){
+        this.getJson(`${API_URL}/addToBasket.json`)
+            .then(data => {
+                if(data.result ===1) {
+                    let productId = +element.dataset['id'];
+                    let find = this.allProducts.find(product => product.id_product === productId);
+                    if(find){
+                        find.quantity++;
+                        this.upDateCart(find);
+                    } elese {
+                        let product = {
+                            id_product: productId,
+                            price: +element.dataset['price'],
+                            product_name: element.dataset['name'],
+                            quantity: 1
+                        };
+                        this.goods = [product];
+                        this.render();
+                    }
+                } else {
+                    alert('Error');
+                }
+            });
     }
-    changeGoods(){
-
+    removeProduct(element){
+        this.getJson(`${API_URL}/deleteFromBasket.json`)
+            .then(data => {
+                if(data.result ===1){
+                    let productId = +element.dataset['id'];
+                    let find = this.allProducts.find(product => product.id_product === productId);
+                    if(find.quantity > 1){
+                        find.quantity--;
+                        this.upDateCart(find);
+                    }
+                } else {
+                    alert('Error');
+                }
+            })
     }
-    render(){
-
+    _upDateCart(product){
+        let block = document.querySelector(`.cart-item[data-id="${product.id_product}"]`);
+        block.querySelector('.product-quantity').textContent = `Quantity: ${product.quantity}`;
+        block.querySelector('.product-price').textContent = `${product.quantity*product.price}`;
     }
+
+    _init(){
+        document.querySelector('.btn-cart').addEventListener('click', () => {
+            document.querySelector(this.container).classList.toggle('invisible');
+        });
+        document.querySelector(this.container).addEventListener('click', e => {
+            if(e.target.classList.contains('del-btn')){
+                this.removeProduct(e.target);
+            }
+        })
+    }   
 }
 
-class ElemCart {
-    
+class CartItem extends Item {
+    constructor(el, img = 'https://www.ibisegypttours.com/images/accomadation/blogpost-placeholder-100x100.png'){
+        super(el, img);
+        this.quantity = el.quantity;
     }
 
 /*let blockCart = document.querySelector('.btn-cart');
@@ -139,8 +191,8 @@ blockCart.addEventListener ('click', function() {
     document.querySelector('.cart__window').style.display = 'block'
 });*/
 
-let list = new ProductList();
-list.summa();
+/*let list = new ProductList();
+list.summa();*/
 
 /* const products = [
     {id: 1, title: 'Notebook', price: 2000},
